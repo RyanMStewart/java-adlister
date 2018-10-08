@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <%--
   Created by IntelliJ IDEA.
   User: ryan
@@ -9,15 +11,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <jsp:include page="/partials/head.jsp">
+        <jsp:param name="title" value="Welcome to Ad Lister!" />
+    </jsp:include>
 </head>
 <body>
-    <%@include file="/partials/navbar.jsp"%>
-    <h1>Products Listing</h1>
-    <c:forEach var="product" items="${products}">
-        <div class="product">
-            <h2>${product.name}</h2>
-            <p>Price: $ ${product.price}</p>
+    <jsp:include page="/partials/navbar.jsp" />
+    <h1>Ads Listing</h1>
+    <c:forEach var="ad" items="${ads}">
+        <div class="ad">
+            <h2>${ad.getTitle()}</h2>
+            <p>Description: ${ad.getDescription()}</p>
         </div>
     </c:forEach>
 
