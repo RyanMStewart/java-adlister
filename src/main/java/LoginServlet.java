@@ -4,14 +4,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "HelloWorldServlet", urlPatterns = "/")
+@WebServlet(name = "LoginCheckServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
 
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-
-            response.getWriter().println("<h1>Hello, World!</h1>");
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+                if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("password")) {
+                    response.sendRedirect("/profile.jsp");
         }
-    }
+        }
 }
