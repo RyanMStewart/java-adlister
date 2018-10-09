@@ -8,4 +8,5 @@ import java.util.List;
 public interface Users {
     User findByUsername(String username) throws SQLException;
     Long insert(User user) throws SQLException;
+    void createUser(String username, String email, String password);
 }
