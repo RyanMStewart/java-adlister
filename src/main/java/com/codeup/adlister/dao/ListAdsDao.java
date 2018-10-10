@@ -31,6 +31,14 @@ public class ListAdsDao implements Ads {
         return null;
     }
 
+    public List<Ad> searchAdsByTitle(String term) {
+        return null;
+    }
+
+    public List<Ad> searchAdsByDesc(String term) {
+        return null;
+    }
+
     private List<Ad> generateAds() {
         List<Ad> ads = new ArrayList<>();
         ads.add(new Ad(

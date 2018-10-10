@@ -59,6 +59,52 @@ public class MySQLAdsDao implements Ads {
     }
 
     @Override
+    public List<Ad> searchAdsByTitle(String term) {
+        List<Ad> searchAds = new ArrayList<>();
+        try {
+            String searchQuery = "SELECT * FROM ads WHERE title LIKE ?";
+            PreparedStatement stmt = connection.prepareStatement(searchQuery);
+            stmt.setString(1, "%" + term + "%");
+//            stmt.setString(2, term);
+            ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    searchAds.add(extractAd(rs));
+                }
+//                for (Ad ad : searchAds) {
+//                    System.out.println(ad.getId());
+//                    System.out.println(ad.getTitle());
+//                }
+            return searchAds;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new RuntimeException("Error searching for term");
+        }
+    }
+
+    @Override
+    public List<Ad> searchAdsByDesc(String term) {
+        List<Ad> searchAds = new ArrayList<>();
+        try {
+            String searchQuery = "SELECT * FROM ads WHERE description LIKE ?";
+            PreparedStatement stmt = connection.prepareStatement(searchQuery);
+            stmt.setString(1, "%" + term + "%");
+//            stmt.setString(2, term);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                searchAds.add(extractAd(rs));
+            }
+//                for (Ad ad : searchAds) {
+//                    System.out.println(ad.getId());
+//                    System.out.println(ad.getTitle());
+//                }
+            return searchAds;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new RuntimeException("Error searching for term");
+        }
+    }
+
+    @Override
     public Long insert(Ad ad) {
         try {
             String insertQuery = "INSERT INTO ads(user_id, title, description) VALUES (?, ?, ?)";
