@@ -4,6 +4,8 @@ import com.codeup.adlister.models.User;
 import com.mysql.cj.jdbc.Driver;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySQLUsersDao implements Users {
     private Connection connection;
@@ -41,6 +43,28 @@ public class MySQLUsersDao implements Users {
             return extractUser(stmt.executeQuery());
         } catch (SQLException e) {
             throw new RuntimeException("Error finding a user by username", e);
+        }
+    }
+
+    @Override
+    public boolean checkUsernameDuplicates(String username) {
+        try {
+            List<String> usernameList = new ArrayList<>();
+            String query = "SELECT username FROM users";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                usernameList.add(rs.getString("username"));
+            }
+                for (String name : usernameList) {
+                    if (name.equalsIgnoreCase(username)) {
+                        return true;
+                    }
+                }
+                return false;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new RuntimeException("Something went wrong when checking for duplicate usernames");
         }
     }
 

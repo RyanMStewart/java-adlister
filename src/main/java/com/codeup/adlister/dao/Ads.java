@@ -1,6 +1,7 @@
 package com.codeup.adlister.dao;
 
 import com.codeup.adlister.models.Ad;
+import com.codeup.adlister.models.User;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface Ads {
     List<Ad> searchAdsByTitle(String term);
 
     List<Ad> searchAdsByDesc(String term);
+
+    List<Ad> getAdsByUser(User user);
 }

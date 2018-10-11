@@ -1,6 +1,7 @@
 package com.codeup.adlister.dao;
 
 import com.codeup.adlister.models.Ad;
+import com.codeup.adlister.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,10 @@ public class ListAdsDao implements Ads {
     }
 
     public List<Ad> searchAdsByDesc(String term) {
+        return null;
+    }
+
+    public List<Ad> getAdsByUser(User user) {
         return null;
     }
 

@@ -18,7 +18,7 @@ public class RegisterServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -30,17 +30,26 @@ public class RegisterServlet extends HttpServlet {
                 || password.isEmpty()
                 || (!password.equals(passwordConfirmation));
 
-        if (inputHasErrors) {
+        boolean usernameIsDuplicate = DaoFactory.getUsersDao().checkUsernameDuplicates(username);
+
+        if (inputHasErrors || usernameIsDuplicate) {
+//            request.setParameter
+            request.getSession().setAttribute("duplicate", usernameIsDuplicate);
+//            request.getRequestDispatcher("/register").forward(request, response);
             response.sendRedirect("/register");
             return;
+        } else {
+            User user = new User(username, email, Password.hash(password));
+            DaoFactory.getUsersDao().insert(user);
+            response.sendRedirect("/login");
+
         }
 
         // hash password
         // String hash = BCrypt.hashpw(password, BCrypt.gensalt());
 
         // create and save a new user
-        User user = new User(username, email, Password.hash(password));
-        DaoFactory.getUsersDao().insert(user);
-        response.sendRedirect("/login");
+//        User user = new User(username, email, Password.hash(password));
+
     }
 }

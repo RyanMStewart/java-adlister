@@ -1,6 +1,7 @@
 package com.codeup.adlister.dao;
 
 import com.codeup.adlister.models.Ad;
+import com.codeup.adlister.models.User;
 import com.mysql.cj.jdbc.Driver;
 
 import java.io.FileInputStream;
@@ -59,6 +60,26 @@ public class MySQLAdsDao implements Ads {
     }
 
     @Override
+    public List<Ad> getAdsByUser(User user) {
+        List usersAds = new ArrayList<>();
+        try {
+//            Long id = user.getId();
+            String searchQuery = "SELECT * FROM ads JOIN users ON ads.user_id = users.id WHERE user_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(searchQuery);
+            stmt.setLong(1, user.getId());
+//            stmt.setString(2, term);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                usersAds.add(extractAd(rs));
+            }
+            return usersAds;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new RuntimeException("Could not find ads by particular user");
+            }
+    }
+
+    @Override
     public List<Ad> searchAdsByTitle(String term) {
         List<Ad> searchAds = new ArrayList<>();
         try {
@@ -70,10 +91,6 @@ public class MySQLAdsDao implements Ads {
                 while (rs.next()) {
                     searchAds.add(extractAd(rs));
                 }
-//                for (Ad ad : searchAds) {
-//                    System.out.println(ad.getId());
-//                    System.out.println(ad.getTitle());
-//                }
             return searchAds;
         } catch (SQLException e) {
             System.out.println(e);
@@ -93,10 +110,6 @@ public class MySQLAdsDao implements Ads {
             while (rs.next()) {
                 searchAds.add(extractAd(rs));
             }
-//                for (Ad ad : searchAds) {
-//                    System.out.println(ad.getId());
-//                    System.out.println(ad.getTitle());
-//                }
             return searchAds;
         } catch (SQLException e) {
             System.out.println(e);
