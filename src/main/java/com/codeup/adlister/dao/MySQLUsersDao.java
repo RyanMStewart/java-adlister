@@ -22,6 +22,7 @@ public class MySQLUsersDao implements Users {
             throw new RuntimeException("Error connecting to the database!", e);
         }
     }
+
     @Override
     public User getUserById(Long id) {
         String query = "SELECT * FROM users WHERE id = ?";

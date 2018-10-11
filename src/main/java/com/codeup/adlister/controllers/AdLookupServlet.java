@@ -2,6 +2,7 @@ package com.codeup.adlister.controllers;
 
 import com.codeup.adlister.dao.DaoFactory;
 import com.codeup.adlister.models.Ad;
+import com.codeup.adlister.models.User;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -18,9 +19,21 @@ public class AdLookupServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String id = request.getParameter("id");
         String creator = request.getParameter("user");
-//        System.out.println(id);
-        request.setAttribute("ad", DaoFactory.getAdsDao().getAdById(Long.parseLong(id)));
-        request.setAttribute("creator", DaoFactory.getUsersDao().getUserById(Long.parseLong(creator)));
+        User currentUser = (User) request.getSession().getAttribute("user");
+
+        Ad ad = DaoFactory.getAdsDao().getAdById(Long.parseLong(id));
+        User adCreator = DaoFactory.getUsersDao().getUserById(Long.parseLong(creator));
+
+        System.out.println("Ad creator ID: " + ad.getUserId());
+        System.out.println("Current logged in users id: " + currentUser.getId());
+
+            if (ad.getUserId() == currentUser.getId()) {
+                request.getSession().setAttribute("loggedInCreator", true);
+            } else {
+                request.getSession().setAttribute("loggedInCreator", false);
+            }
+        request.setAttribute("ad", ad);
+        request.setAttribute("creator", adCreator);
         request.getRequestDispatcher("WEB-INF/ads/adInfo.jsp").forward(request, response);
     }
 

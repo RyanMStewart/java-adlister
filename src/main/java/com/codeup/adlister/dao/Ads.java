@@ -18,4 +18,6 @@ public interface Ads {
     List<Ad> searchAdsByDesc(String term);
 
     List<Ad> getAdsByUser(User user);
+
+    void deleteAdById(Long id);
 }
