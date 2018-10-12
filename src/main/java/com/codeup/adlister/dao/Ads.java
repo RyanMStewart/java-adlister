@@ -20,4 +20,6 @@ public interface Ads {
     List<Ad> getAdsByUser(User user);
 
     void deleteAdById(Long id);
+
+    void updatePost(String newTitle, String newDescription, Long id);
 }

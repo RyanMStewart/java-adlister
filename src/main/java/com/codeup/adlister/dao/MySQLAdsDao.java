@@ -135,6 +135,21 @@ public class MySQLAdsDao implements Ads {
     }
 
     @Override
+    public void updatePost(String newTitle, String newDescription, Long id) {
+        try {
+            String updateQuery = "UPDATE ads SET title = ?, description = ? WHERE id = ?";
+            PreparedStatement stmt = connection.prepareStatement(updateQuery);
+            stmt.setString(1, newTitle);
+            stmt.setString(2, newDescription);
+            stmt.setLong(3, id);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new RuntimeException("Failed to update the users ad");
+        }
+    }
+
+    @Override
     public void deleteAdById(Long id) {
         try {
             String deleteQuery = "DELETE FROM ads WHERE id = ?";
@@ -142,7 +157,7 @@ public class MySQLAdsDao implements Ads {
             stmt.setLong(1, id);
             stmt.execute();
             ResultSet rs = stmt.getGeneratedKeys();
-//            ResultSet rs = stmt.execute(); WILL NOT WORK WITH DELETE 
+//            ResultSet rs = stmt.execute(); WILL NOT WORK WITH DELETE
 //            if (rs.next()) {
 //                System.out.println("Delete was successful");
 //            }

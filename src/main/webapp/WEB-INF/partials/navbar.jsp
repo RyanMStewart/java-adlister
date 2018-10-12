@@ -25,7 +25,7 @@
         <%--IF PERSON IS ON AD-VIEW PAGE AND THEY ARE THE CREATOR ALLOW EDITING    --%>
                 <% } %> <% if (request.getRequestURI().toString().equals("/WEB-INF/ads/adInfo.jsp") && (boolean) request.getSession().getAttribute("loggedInCreator")) { %>
             <li><a href="/delete?post=${ad.id}">Delete</a></li>
-            <li><a href="/update">Update</a></li>
+            <li><a href="/update?post=${ad.id}">Update</a></li>
                 <% } %>
         </ul>
         <form style="margin-top:1em" class="form-inline align-bottom" method="GET" action="/search">

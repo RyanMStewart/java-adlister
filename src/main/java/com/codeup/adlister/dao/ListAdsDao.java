@@ -44,6 +44,8 @@ public class ListAdsDao implements Ads {
         return null;
     }
 
+    public void updatePost(String newTitle, String newDescription, Long id) {}
+
     public void deleteAdById(Long id) {}
 
     private List<Ad> generateAds() {
