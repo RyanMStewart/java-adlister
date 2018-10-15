@@ -59,6 +59,7 @@ public class MySQLUsersDao implements Users {
             }
                 for (String name : usernameList) {
                     if (name.equalsIgnoreCase(username)) {
+                        System.out.println("Found matching username");
                         return true;
                     }
                 }

@@ -1,3 +1,6 @@
+<%@ page import="com.codeup.adlister.models.Ad" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.codeup.adlister.dao.DaoFactory" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -17,7 +20,9 @@
             <h3>User ID: ${user.id}</h3>
             <h3>Username: ${user.username}</h3>
             <h3>Email: ${user.email}</h3>
+            <input type="button" value="Edit Profile" onclick="window.open('/profile/edit','_blank','resizable=yes')" />
         </div>
+        <%--<% List<Ad> usersAds = DaoFactory.getAdsDao().getAdsByUser(); %>--%>
         <div>
             <h2 style="text-decoration:underline">${user.username}'s Ad's</h2>
             <c:forEach var="ad" items="${usersAds}">
