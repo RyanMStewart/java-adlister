@@ -20,18 +20,24 @@ public class AdLookupServlet extends HttpServlet {
         String id = request.getParameter("id");
         String creator = request.getParameter("user");
         User currentUser = (User) request.getSession().getAttribute("user");
-
         Ad ad = DaoFactory.getAdsDao().getAdById(Long.parseLong(id));
         User adCreator = DaoFactory.getUsersDao().getUserById(Long.parseLong(creator));
 
-        System.out.println("Ad creator ID: " + ad.getUserId());
-        System.out.println("Current logged in users id: " + currentUser.getId());
+            if (currentUser == null) {
+    //            Ad ad = DaoFactory.getAdsDao().getAdById(Long.parseLong(id));
+    //            User adCreator = DaoFactory.getUsersDao().getUserById(Long.parseLong(creator));
+                request.setAttribute("ad", ad);
+                request.setAttribute("creator", adCreator);
+                request.getRequestDispatcher("/WEB-INF/ads/adInfo.jsp").forward(request, response);
+                return;
+            }
 
             if (ad.getUserId() == currentUser.getId()) {
                 request.getSession().setAttribute("loggedInCreator", true);
             } else {
                 request.getSession().setAttribute("loggedInCreator", false);
             }
+            
         request.setAttribute("ad", ad);
         request.setAttribute("creator", adCreator);
         request.getRequestDispatcher("WEB-INF/ads/adInfo.jsp").forward(request, response);

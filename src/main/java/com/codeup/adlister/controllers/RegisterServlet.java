@@ -23,26 +23,44 @@ public class RegisterServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String passwordConfirmation = request.getParameter("confirm_password");
+        boolean passwordIsValid = DaoFactory.getUsersDao().checkPasswordRequirements(password);
 
         // validate input
         boolean inputHasErrors = username.isEmpty()
                 || email.isEmpty()
                 || password.isEmpty()
-                || (!password.equals(passwordConfirmation));
+                || (!password.equals(passwordConfirmation))
+                || (!passwordIsValid);
 
         boolean usernameIsDuplicate = DaoFactory.getUsersDao().checkUsernameDuplicates(username);
 
-        if (inputHasErrors || usernameIsDuplicate) {
+        if(usernameIsDuplicate) {
+            request.getSession().setAttribute("duplicate", true);
+            response.sendRedirect("/register");
+            return;
+        } else {
+            request.getSession().setAttribute("duplicate", false);
+        }
+
+        if(!passwordIsValid) {
+            request.getSession().setAttribute("passwordIsValid", false);
+            response.sendRedirect("/register");
+            return;
+        } else {
+            request.getSession().setAttribute("passwordIsValid", true);
+        }
+
+        if (inputHasErrors) {
 //            request.setParameter
-            request.getSession().setAttribute("duplicate", usernameIsDuplicate);
+//            request.getSession().setAttribute("duplicate", usernameIsDuplicate);
 //            request.getRequestDispatcher("/register").forward(request, response);
             response.sendRedirect("/register");
             return;
         } else {
-            User user = new User(username, email, Password.hash(password));
+            String hash = BCrypt.hashpw(password, BCrypt.gensalt());
+            User user = new User(username, email, hash);
             DaoFactory.getUsersDao().insert(user);
             response.sendRedirect("/login");
-
         }
 
         // hash password

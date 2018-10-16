@@ -25,33 +25,60 @@ public class EditProfileServlet extends HttpServlet {
     }
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String currentUsername = request.getParameter("oldUsername");
         String username = request.getParameter("newUsername");
         String password = request.getParameter("password");
         String rePassword = request.getParameter("rePassword");
+        boolean passwordIsValid = DaoFactory.getUsersDao().checkPasswordRequirements(password);
+
+        User currentUser = (User) request.getSession().getAttribute("user");
 
         boolean usernameIsDuplicate = DaoFactory.getUsersDao().checkUsernameDuplicates(username);
-        System.out.println(username);
-        System.out.println(usernameIsDuplicate);
+        boolean oldUsernameIsGood = currentUser.getUsername().equals(currentUsername);
+//        boolean usernameIsNotDuplicate = !usernameIsDuplicate;
+        boolean passwordsMatch = password.equals(rePassword);
 
-        if (usernameIsDuplicate) {
-            request.getSession().setAttribute("usernameDuplicate", true);
-            response.sendRedirect("/profile/edit");
-//            request.getRequestDispatcher("/profile/editProfile.jsp").forward(request, response);
-        } else {
-            request.getSession().setAttribute("usernameDuplicate", false);
-        }
+            if(!currentUser.getUsername().equals(currentUsername)) {
+                request.getSession().setAttribute("oldUsernameMatches", false);
+                response.sendRedirect("/profile/edit");
+                return;
+            } else {
+                request.getSession().setAttribute("oldUsernameMatches", true);
+            }
+
+            if (usernameIsDuplicate) {
+                request.getSession().setAttribute("usernameDuplicate", true);
+                response.sendRedirect("/profile/edit");
+                return;
+            } else {
+                request.getSession().setAttribute("usernameDuplicate", false);
+            }
 
             if (!password.equals(rePassword)) {
                 request.getSession().setAttribute("passwordMatch", false);
                 response.sendRedirect("/profile/edit");
-//                request.getRequestDispatcher("/profile/editProfile.jsp").forward(request, response);
+                return;
             } else {
                 request.getSession().setAttribute("passwordMatch", true);
             }
 
+            if(!passwordIsValid) {
+                request.getSession().setAttribute("passwordIsValid", false);
+                response.sendRedirect("/profile/edit");
+                return;
+            } else {
+                request.getSession().setAttribute("passwordIsValid", true);
+            }
 
-        request.setAttribute("usersAds", DaoFactory.getAdsDao().getAdsByUser((User) request.getSession().getAttribute("user")));
-        request.getRequestDispatcher("/WEB-INF/profile.jsp").forward(request, response);
+        if (oldUsernameIsGood && !usernameIsDuplicate && passwordsMatch && passwordIsValid) {
+            DaoFactory.getUsersDao().updateUsername(username, currentUser);
+            User user = DaoFactory.getUsersDao().findByUsername(username);
+            request.getSession().setAttribute("user", user);
+            request.setAttribute("usersAds", DaoFactory.getAdsDao().getAdsByUser((User) request.getSession().getAttribute("user")));
+//            request.getRequestDispatcher("/profile").forward(request, response);
+            response.sendRedirect("/profile");
+        }
+
 
 //            else {
 //                request.getSession().setAttribute("passwordMatch", );

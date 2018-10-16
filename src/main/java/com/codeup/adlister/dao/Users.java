@@ -9,4 +9,6 @@ public interface Users {
     Long insert(User user);
     User getUserById(Long id);
     boolean checkUsernameDuplicates(String username);
+    void updateUsername(String newUsername, User currentUser);
+    boolean checkPasswordRequirements(String password);
 }

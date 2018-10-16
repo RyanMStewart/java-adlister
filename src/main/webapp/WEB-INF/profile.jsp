@@ -20,13 +20,13 @@
             <h3>User ID: ${user.id}</h3>
             <h3>Username: ${user.username}</h3>
             <h3>Email: ${user.email}</h3>
-            <input type="button" value="Edit Profile" onclick="window.open('/profile/edit','_blank','resizable=yes')" />
+            <input type="button" value="Edit Profile" onclick="window.location.href='/profile/edit'" />
         </div>
         <%--<% List<Ad> usersAds = DaoFactory.getAdsDao().getAdsByUser(); %>--%>
         <div>
             <h2 style="text-decoration:underline">${user.username}'s Ad's</h2>
             <c:forEach var="ad" items="${usersAds}">
-                <h1>${ad.title}</h1>
+                <h1><a href="/view?id=${ad.id}&user=${ad.getUserId()}">${ad.title}</a></h1>
                 <p>${ad.description}</p>
             </c:forEach>
         </div>

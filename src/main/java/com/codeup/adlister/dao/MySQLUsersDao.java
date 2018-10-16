@@ -23,6 +23,69 @@ public class MySQLUsersDao implements Users {
         }
     }
 
+    public boolean checkPasswordRequirements(String password) {
+        // Needs at least one number
+        // Needs at least one symbol
+        // Must be at least 8 characters long
+//        String[] passwordString = new String[password.length()];
+        if (password.length() < 8) {
+            return false;
+        } else {
+            System.out.println("The length is good");
+        }
+        System.out.println(password.length());
+//        char[] specialChars = {'!', };
+        boolean hasNum = password.matches("[a-zA-Z ]*\\d+.*");
+
+        if (!hasNum) {
+            System.out.println("There was no number in that password");
+            return false;
+        } else {
+            System.out.println("Number is good.");
+        }
+        //        boolean hasSymbol = password.matches("[a-zA-Z0-9]*");
+        char[] charas = password.toCharArray();
+        System.out.println(charas);
+        for (int x = 0; x < password.length(); x++) {
+//            String currentChar = password.charAt(x);
+            System.out.println(password.charAt(x));
+            if (password.charAt(x) == '!') {
+                return true;
+            } else if (password.charAt(x) == '@') {
+                return true;
+            } else if (password.charAt(x) == '#') {
+                return true;
+            } else if (password.charAt(x) == '$') {
+                return true;
+            } else if (password.charAt(x) == '%') {
+                return true;
+            } else if (password.charAt(x) == '^') {
+                return true;
+            } else if (password.charAt(x) == '&') {
+                return true;
+            } else if (password.charAt(x) == '*') {
+                return true;
+            } else {
+                System.out.println("character not found");
+            }
+        }
+//        System.out.println("Has symbol: " + hasSymbol);
+
+
+//        try {
+//            Long num = Long.parseLong(password);
+//        } catch (NumberFormatException e) {
+//            System.out.println("There was no number");
+//            return false;
+//        }
+
+//            if (num == null) {
+//                System.out.println("There is no number");
+//                return false;
+//            }
+        return true;
+    }
+
     @Override
     public User getUserById(Long id) {
         String query = "SELECT * FROM users WHERE id = ?";
@@ -32,6 +95,20 @@ public class MySQLUsersDao implements Users {
             return extractUser(stmt.executeQuery());
         } catch (SQLException e) {
             throw new RuntimeException("Error finding user by id");
+        }
+    }
+
+    @Override
+    public void updateUsername(String newUsername, User curUser) {
+        String query = "UPDATE users SET username = ? WHERE username = ?";
+        String currentName = curUser.getUsername();
+        try {
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, newUsername);
+            stmt.setString(2, currentName);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not update username");
         }
     }
 

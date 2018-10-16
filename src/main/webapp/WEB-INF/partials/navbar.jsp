@@ -23,7 +23,10 @@
             <li><a href="/profile">Profile</a></li>
             <%--<li><% Object test = request.getRequestURI(); %> <%= test.toString() %></li>--%>
         <%--IF PERSON IS ON AD-VIEW PAGE AND THEY ARE THE CREATOR ALLOW EDITING    --%>
-                <% } %> <% if (request.getRequestURI().toString().equals("/WEB-INF/ads/adInfo.jsp") && (boolean) request.getSession().getAttribute("loggedInCreator")) { %>
+                <% } %>
+            <% if (request.getSession().getAttribute("loggedInCreator") == null) { %>
+            <% request.getSession().setAttribute("loggedInCreator", false); } %>
+            <% if (request.getRequestURI().toString().equals("/WEB-INF/ads/adInfo.jsp") && (boolean) request.getSession().getAttribute("loggedInCreator")) { %>
             <li><a href="/delete?post=${ad.id}">Delete</a></li>
             <li><a href="/update?post=${ad.id}">Update</a></li>
                 <% } %>
