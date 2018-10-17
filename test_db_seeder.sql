@@ -1,4 +1,4 @@
-use ad_lister_db;
+use test_db;
 
 insert into user_credentials (username, email, password) values ('test', 'test', 'test');
 insert into user_credentials (username, email, password) values ('test1', 'test1', 'test');

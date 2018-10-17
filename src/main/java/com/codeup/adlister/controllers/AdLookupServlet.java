@@ -18,6 +18,7 @@ public class AdLookupServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String id = request.getParameter("id");
+        System.out.println(id);
         String creator = request.getParameter("user");
         User currentUser = (User) request.getSession().getAttribute("user");
         Ad ad = DaoFactory.getAdsDao().getAdById(Long.parseLong(id));

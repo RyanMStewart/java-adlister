@@ -20,6 +20,11 @@
         <div class="form-group">
             <label for="email">Old Username:</label>
             <input id="oldUsername" name="oldUsername" class="form-control" type="text"/>
+            <% if (request.getSession().getAttribute("usernameIsNull") == null) {
+                request.setAttribute("usernameIsNull", false);
+            } else if (!(boolean) request.getSession().getAttribute("oldUsernameMatches")){ %>
+            <p>You must enter your current username, try again.</p>
+            <% } %>
             <% if (request.getSession().getAttribute("oldUsernameMatches") == null) {
                 request.setAttribute("oldUsernameMatches", false);
             } else if (!(boolean) request.getSession().getAttribute("oldUsernameMatches")){ %>
@@ -45,7 +50,7 @@
             <% if (request.getSession().getAttribute("passwordIsValid") == null) {
                 request.setAttribute("passwordIsValid", false);
             } else if (!(boolean) request.getSession().getAttribute("passwordIsValid")){ %>
-            <p>Passwords does not meet the minimum requirements, try again.</p>
+            <p>Password does not meet the minimum requirements, try again.</p>
             <% } %>
 
             <% if (request.getSession().getAttribute("passwordMatch") == null) {

@@ -17,17 +17,17 @@
 
         <div>
             <h2 style="text-decoration:underline">User Stats</h2>
-            <h3>User ID: ${user.id}</h3>
-            <h3>Username: ${user.username}</h3>
-            <h3>Email: ${user.email}</h3>
+            <h3>User ID: <c:out value="${user.id}"/></h3>
+            <h3>Username: <c:out value="${user.username}"/></h3>
+            <h3>Email: <c:out value="${user.email}"/></h3>
             <input type="button" value="Edit Profile" onclick="window.location.href='/profile/edit'" />
         </div>
         <%--<% List<Ad> usersAds = DaoFactory.getAdsDao().getAdsByUser(); %>--%>
         <div>
-            <h2 style="text-decoration:underline">${user.username}'s Ad's</h2>
+            <h2 style="text-decoration:underline"><c:out value="${user.username}"/>'s Ad's</h2>
             <c:forEach var="ad" items="${usersAds}">
-                <h1><a href="/view?id=${ad.id}&user=${ad.getUserId()}">${ad.title}</a></h1>
-                <p>${ad.description}</p>
+                <h1><a href="/view?id=${ad.id}&user=${ad.getUserId()}"><c:out value="${ad.title}"/></a></h1>
+                <p><c:out value="${ad.description}"/></p>
             </c:forEach>
         </div>
 

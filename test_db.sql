@@ -1,9 +1,9 @@
 
-drop database ad_lister_db;
+drop database test_db;
 
-create database ad_lister_db;
+create database test_db;
 
-use ad_lister_db;
+use test_db;
 -- ****************** SqlDBM: MySQL ******************;
 -- ***************************************************;
 
@@ -27,10 +27,10 @@ use ad_lister_db;
 
 CREATE TABLE `cats`
 (
- `category_id` INT UNSIGNED,
+ `category_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
  `name` VARCHAR(45) NOT NULL,
- `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
-PRIMARY KEY (`id`)
+ `id`   INT UNSIGNED,
+PRIMARY KEY (`category_id`)
 );
 
 -- ************************************** `user_credentials`
@@ -76,6 +76,7 @@ KEY `fkIdx_117` (`user_id`),
 CONSTRAINT `FK_117` FOREIGN KEY `fkIdx_117` (`user_id`) REFERENCES `user_credentials` (`id`)
 );
 
+
 CREATE TABLE `ad_category`
 (
  -- `id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -85,7 +86,7 @@ CREATE TABLE `ad_category`
 KEY `fkIdx_64` (`ad_id`),
 CONSTRAINT `FK_64` FOREIGN KEY `fkIdx_64` (`ad_id`) REFERENCES `ads` (`id`),
 KEY `fkIdx_61` (`category_id`),
-CONSTRAINT `FK_61` FOREIGN KEY `fkIdx_61` (`category_id`) REFERENCES `cats` (`id`)
+CONSTRAINT `FK_61` FOREIGN KEY `fkIdx_61` (`category_id`) REFERENCES `cats` (`category_id`)
 );
 
 

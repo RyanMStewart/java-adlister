@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: ryan
@@ -16,10 +17,11 @@
     <jsp:include page="/WEB-INF/partials/navbar.jsp"/>
     <div class="container">
         <h1>${ad.title}</h1>
-        <h2>Created by: ${creator.getUsername()}</h2>
+        <h2>Created by: <c:out value="${creator.getUsername()}"/></h2>
         <h2>Description:</h2>
-        <p>${ad.getDescription()}</p>
+        <p><c:out value="${ad.getDescription()}"/></p>
     </div>
 
 </body>
 </html>
+

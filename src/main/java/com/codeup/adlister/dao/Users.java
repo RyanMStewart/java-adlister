@@ -10,5 +10,7 @@ public interface Users {
     User getUserById(Long id);
     boolean checkUsernameDuplicates(String username);
     void updateUsername(String newUsername, User currentUser);
+    void updatePassword(String password, User currentUser);
     boolean checkPasswordRequirements(String password);
+
 }

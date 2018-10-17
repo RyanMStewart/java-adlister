@@ -29,14 +29,22 @@ public class EditProfileServlet extends HttpServlet {
         String username = request.getParameter("newUsername");
         String password = request.getParameter("password");
         String rePassword = request.getParameter("rePassword");
-        boolean passwordIsValid = DaoFactory.getUsersDao().checkPasswordRequirements(password);
+        System.out.println(password);
 
         User currentUser = (User) request.getSession().getAttribute("user");
 
+        boolean passwordIsValid = DaoFactory.getUsersDao().checkPasswordRequirements(password);
         boolean usernameIsDuplicate = DaoFactory.getUsersDao().checkUsernameDuplicates(username);
         boolean oldUsernameIsGood = currentUser.getUsername().equals(currentUsername);
-//        boolean usernameIsNotDuplicate = !usernameIsDuplicate;
         boolean passwordsMatch = password.equals(rePassword);
+
+            if(currentUsername == null || currentUsername.equals("")) {
+                request.getSession().setAttribute("usernameIsNull", true);
+                response.sendRedirect("/profile/edit");
+                return;
+            } else {
+                request.getSession().setAttribute("usernameIsNull", false);
+            }
 
             if(!currentUser.getUsername().equals(currentUsername)) {
                 request.getSession().setAttribute("oldUsernameMatches", false);
@@ -72,10 +80,16 @@ public class EditProfileServlet extends HttpServlet {
 
         if (oldUsernameIsGood && !usernameIsDuplicate && passwordsMatch && passwordIsValid) {
             DaoFactory.getUsersDao().updateUsername(username, currentUser);
+            System.out.println("The password going into update is: " + password);
+            User updatedUser = DaoFactory.getUsersDao().findByUsername(username);
+            DaoFactory.getUsersDao().updatePassword(password, updatedUser);
+
+
+            // UPDATE CURRENT USER IN SESSION SCOPE AFTER PROFILE UPDATE
             User user = DaoFactory.getUsersDao().findByUsername(username);
             request.getSession().setAttribute("user", user);
+
             request.setAttribute("usersAds", DaoFactory.getAdsDao().getAdsByUser((User) request.getSession().getAttribute("user")));
-//            request.getRequestDispatcher("/profile").forward(request, response);
             response.sendRedirect("/profile");
         }
 

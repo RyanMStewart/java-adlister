@@ -31,7 +31,8 @@ public class MySQLAdsDao implements Ads {
     public List<Ad> all() {
         PreparedStatement stmt = null;
         try {
-            stmt = connection.prepareStatement("SELECT * FROM ads");
+            String allAds = "SELECT a.id, a.title, a.user_id, a.description, c.name AS 'category' FROM ads a JOIN ad_category ac ON ac.ad_id = a.id JOIN cats c ON c.id = ac.category_id";
+            stmt = connection.prepareStatement(allAds);
             ResultSet rs = stmt.executeQuery();
             return createAdsFromResults(rs);
         } catch (SQLException e) {
@@ -43,9 +44,10 @@ public class MySQLAdsDao implements Ads {
     public Ad getAdById(Long id) {
 //        Long num = id;
         try {
-            String findQuery = "SELECT * FROM ads WHERE id = ?";
-            PreparedStatement stmt = connection.prepareStatement(findQuery, Statement.RETURN_GENERATED_KEYS);
-            System.out.println(id);
+            String findAdQuery = "SELECT a.id, a.title, a.user_id, a.description, c.name AS 'category' FROM ads a JOIN ad_category ac ON ac.ad_id = a.id JOIN cats c ON c.id = ac.category_id WHERE a.id = ?";
+//            String findQuery = "SELECT * FROM ads WHERE id = ?";
+            PreparedStatement stmt = connection.prepareStatement(findAdQuery, Statement.RETURN_GENERATED_KEYS);
+//            System.out.println(id);
             stmt.setLong(1,id);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()) {
@@ -64,7 +66,7 @@ public class MySQLAdsDao implements Ads {
         List usersAds = new ArrayList<>();
         try {
 //            Long id = user.getId();
-            String searchQuery = "SELECT * FROM ads JOIN users ON ads.user_id = users.id WHERE user_id = ?";
+            String searchQuery = "SELECT * FROM ads JOIN user_credentials ON ads.user_id = user_credentials.id WHERE user_id = ?";
             PreparedStatement stmt = connection.prepareStatement(searchQuery);
             stmt.setLong(1, user.getId());
 //            stmt.setString(2, term);
@@ -120,11 +122,11 @@ public class MySQLAdsDao implements Ads {
     @Override
     public Long insert(Ad ad) {
         try {
-            String insertQuery = "INSERT INTO ads(user_id, title, description) VALUES (?, ?, ?)";
+            String insertQuery = "INSERT INTO ads(title, description, user_id) VALUES (?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS);
-            stmt.setLong(1, ad.getUserId());
-            stmt.setString(2, ad.getTitle());
-            stmt.setString(3, ad.getDescription());
+            stmt.setString(1, ad.getTitle());
+            stmt.setString(2, ad.getDescription());
+            stmt.setLong(3, ad.getUserId());
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             rs.next();
@@ -172,7 +174,8 @@ public class MySQLAdsDao implements Ads {
             rs.getLong("id"),
             rs.getLong("user_id"),
             rs.getString("title"),
-            rs.getString("description")
+            rs.getString("description"),
+            rs.getString("category")
         );
     }
 
@@ -183,4 +186,6 @@ public class MySQLAdsDao implements Ads {
         }
         return ads;
     }
+
+//    public String getAdCategory(ResultSet)
 }
