@@ -16,7 +16,8 @@
 <body>
     <jsp:include page="/WEB-INF/partials/navbar.jsp"/>
     <div class="container">
-        <h1>${ad.title}</h1>
+        <h1><c:out value="${ad.title}"/></h1>
+        <h2>Category: <c:out value="${ad.category}"/></h2>
         <h2>Created by: <c:out value="${creator.getUsername()}"/></h2>
         <h2>Description:</h2>
         <p><c:out value="${ad.getDescription()}"/></p>

@@ -41,6 +41,42 @@ public class MySQLAdsDao implements Ads {
     }
 
     @Override
+    public List<String> allCats() {
+        List cats = new ArrayList<>();
+        PreparedStatement stmt = null;
+        try {
+            String allCats = "SELECT name FROM cats";
+            stmt = connection.prepareStatement(allCats);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                cats.add(rs.getString("name"));
+            }
+            return cats;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new RuntimeException("Error finding all the categories");
+        }
+    }
+
+    @Override
+    public List<Ad> getAdsByCategory(String categoryName) {
+        List adsByCategory = new ArrayList<>();
+        try {
+            String adByCategoryQuery = "SELECT a.id, a.title, a.user_id, a.description, c.name AS 'category' FROM ads a JOIN ad_category ac ON a.id = ac.ad_id JOIN cats c ON c.category_id = ac.category_id WHERE c.name = ?";
+            PreparedStatement stmt = connection.prepareStatement(adByCategoryQuery);
+            stmt.setString(1, categoryName);
+            ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                adsByCategory.add(createAdsFromResults(rs));
+            }
+            return adsByCategory;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new RuntimeException("Could not retrieve ads by category");
+        }
+    }
+
+    @Override
     public Ad getAdById(Long id) {
 //        Long num = id;
         try {
@@ -66,8 +102,9 @@ public class MySQLAdsDao implements Ads {
         List usersAds = new ArrayList<>();
         try {
 //            Long id = user.getId();
-            String searchQuery = "SELECT * FROM ads JOIN user_credentials ON ads.user_id = user_credentials.id WHERE user_id = ?";
-            PreparedStatement stmt = connection.prepareStatement(searchQuery);
+            String usersAdsQuery = "SELECT a.id, a.title, a.user_id, a.description, c.name AS 'category' FROM ads a JOIN ad_category ac ON ac.ad_id = a.id JOIN cats c ON c.id = ac.category_id WHERE a.id = ?";
+//            String searchQuery = "SELECT * FROM ads JOIN user_credentials ON ads.user_id = user_credentials.id WHERE user_credentials.id = ?";
+            PreparedStatement stmt = connection.prepareStatement(usersAdsQuery);
             stmt.setLong(1, user.getId());
 //            stmt.setString(2, term);
             ResultSet rs = stmt.executeQuery();

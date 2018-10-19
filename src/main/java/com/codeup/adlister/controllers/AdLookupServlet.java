@@ -24,24 +24,23 @@ public class AdLookupServlet extends HttpServlet {
         Ad ad = DaoFactory.getAdsDao().getAdById(Long.parseLong(id));
         User adCreator = DaoFactory.getUsersDao().getUserById(Long.parseLong(creator));
 
-            if (currentUser == null) {
-    //            Ad ad = DaoFactory.getAdsDao().getAdById(Long.parseLong(id));
-    //            User adCreator = DaoFactory.getUsersDao().getUserById(Long.parseLong(creator));
-                request.setAttribute("ad", ad);
-                request.setAttribute("creator", adCreator);
-                request.getRequestDispatcher("/WEB-INF/ads/adInfo.jsp").forward(request, response);
-                return;
-            }
+        if (currentUser == null) {
+            //            Ad ad = DaoFactory.getAdsDao().getAdById(Long.parseLong(id));
+            //            User adCreator = DaoFactory.getUsersDao().getUserById(Long.parseLong(creator));
+            request.setAttribute("ad", ad);
+            request.setAttribute("creator", adCreator);
+            request.getRequestDispatcher("/WEB-INF/ads/adInfo.jsp").forward(request, response);
+            return;
+        }
 
-            if (ad.getUserId() == currentUser.getId()) {
-                request.getSession().setAttribute("loggedInCreator", true);
-            } else {
-                request.getSession().setAttribute("loggedInCreator", false);
-            }
-            
+        if (ad.getUserId() == currentUser.getId()) {
+            request.getSession().setAttribute("loggedInCreator", true);
+        } else {
+            request.getSession().setAttribute("loggedInCreator", false);
+        }
+
         request.setAttribute("ad", ad);
         request.setAttribute("creator", adCreator);
         request.getRequestDispatcher("WEB-INF/ads/adInfo.jsp").forward(request, response);
     }
-
 }

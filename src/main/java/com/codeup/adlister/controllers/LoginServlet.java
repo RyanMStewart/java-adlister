@@ -25,21 +25,34 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        request.getSession().setAttribute("stickyUsername", username);
+        request.getSession().setAttribute("stickyPassword", password);
         User user = DaoFactory.getUsersDao().findByUsername(username);
 
         if (user == null) {
             response.sendRedirect("/login");
             return;
         }
-
-        boolean validAttempt = BCrypt.checkpw(password, user.getPassword());
+        try {
+            boolean validAttempt = BCrypt.checkpw(password, user.getPassword());
 //        boolean validAttempt = password.equals(user.getPassword());
-
-        if (validAttempt) {
-            request.getSession().setAttribute("user", user);
-            response.sendRedirect("/profile");
-        } else {
-            response.sendRedirect("/login");
+            if (validAttempt) {
+                    request.getSession().setAttribute("user", user);
+                    response.sendRedirect("/profile");
+            } else {
+                    request.getSession().setAttribute("failedLogin", true);
+                    response.sendRedirect("/login");
+//                        request.getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+//                    } catch (ServletException e) {
+//                        System.out.println("Could not forward request");
+//                        throw new RuntimeException("This forward failed.");
+//                    }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+            System.out.println("This password is in plain text. It was never hashed and cannot be compared for login");
         }
+
+
     }
 }

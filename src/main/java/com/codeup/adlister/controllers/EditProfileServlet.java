@@ -29,7 +29,6 @@ public class EditProfileServlet extends HttpServlet {
         String username = request.getParameter("newUsername");
         String password = request.getParameter("password");
         String rePassword = request.getParameter("rePassword");
-        System.out.println(password);
 
         User currentUser = (User) request.getSession().getAttribute("user");
 
@@ -91,6 +90,8 @@ public class EditProfileServlet extends HttpServlet {
 
             request.setAttribute("usersAds", DaoFactory.getAdsDao().getAdsByUser((User) request.getSession().getAttribute("user")));
             response.sendRedirect("/profile");
+        } else {
+
         }
 
 
